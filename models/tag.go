@@ -1,64 +1,45 @@
 package models
 
 import (
+	"errors"
 	"log"
-	"time"
 
-	"github.com/mistadave/gt-api/db"
+	"gorm.io/gorm"
 )
 
 type Tag struct {
-	ID        int       `db:"id" json:"id"`
-	Name      string    `db:"name" json:"name"`
-	UpdatedAt time.Time `db:"updated_at" json:"updated_at,omitempty"`
+	ID   uint   `gorm:"type:int;auto_increment;primary_key"`
+	Name string `gorm:"type:varchar(255);not null"`
+	gorm.Model
 }
 
-// type Tag struct {
-// 	gorm.Model
-// 	Name string
-// }
-
-func (t Tag) SearchBy(query string) (*Tag, error) {
-	db := db.GetDB()
-	sql := "SELECT * FROM tags WHERE name like %" + query + "%"
-	rows, err := db.Query(sql)
-	if err != nil {
-		log.Fatal(err)
+func (t Tag) SearchBy(query string) (*[]Tag, error) {
+	db := GetDB()
+	var tags []Tag
+	result := db.Where("name LIKE ?", "%"+query+"%").Find(&tags)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil, errors.New("tag not found")
+	} else if result.Error != nil {
+		log.Fatal(result.Error)
 	}
-	defer rows.Close()
-	tag := Tag{}
-	for rows.Next() {
-		if err := rows.Scan(&tag.ID, &tag.Name, &tag.UpdatedAt); err != nil {
-			log.Fatal(err)
-		}
-	}
-	return &tag, nil
+	return &tags, nil
 }
 
 func (t Tag) GetAll() ([]*Tag, error) {
-	db := db.GetDB()
-	sql := "SELECT * FROM tags"
-	rows, err := db.Query(sql)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
-
+	db := GetDB()
 	var tags []*Tag
-	for rows.Next() {
-		var tag Tag
-		if err := rows.Scan(&tag.ID, &tag.Name, &tag.UpdatedAt); err != nil {
-			log.Fatal(err)
-		}
-		tags = append(tags, &tag)
+	result := db.Find(&tags)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil, errors.New("tags not found")
+	} else if result.Error != nil {
+		log.Fatal(result.Error)
 	}
 	return tags, nil
 }
 
 func (t Tag) Create(tag *Tag) (*Tag, error) {
-	db := db.GetDB()
-	sql := "INSERT INTO tags (name) VALUES (?)"
-	_, err := db.Exec(sql, tag.Name)
+	db := GetDB()
+	err := db.Create(&tag).Error
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -1,104 +1,84 @@
 package models
 
 import (
+	"errors"
 	"log"
 	"time"
 
-	"github.com/mistadave/gt-api/db"
 	uuid "github.com/satori/go.uuid"
+	"gorm.io/gorm"
 )
 
 type LinkTag struct {
-	LinkID string `db:"link_id"`
-	TagID  int    `db:"tag_id"`
+	LinkID uuid.UUID `gorm:"type:uuid;not null"`
+	TagID  uint      `gorm:"type:int;not null"`
+	gorm.Model
 }
 
 type Link struct {
-	ID        uuid.UUID `db:"id" json:"id"`
-	Name      string    `db:"name" json:"name"`
-	Desc      string    `db:"desc" json:"desc"`
-	URL       string    `db:"url" json:"url"`
-	UpdatedAt time.Time `db:"updated_at" json:"updated_at,omitempty"`
-	GameID    uuid.UUID `db:"game_id" json:"gameId"`
+	ID     uuid.UUID `gorm:"type:uuid;default:not null"`
+	Name   string    `gorm:"type:varchar(100);not null"`
+	Desc   string    `gorm:"type:text"`
+	URL    string    `gorm:"type:varchar(255);not null"`
+	GameID uuid.UUID `gorm:"type:uuid;not null"`
+	gorm.Model
 }
 
 func (l Link) GetAll() ([]*Link, error) {
-	db := db.GetDB()
-	sql := "SELECT * FROM links"
-	rows, err := db.Query(sql)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
-
+	db := GetDB()
 	var links []*Link
-	for rows.Next() {
-		var link Link
-		if err := rows.Scan(&link.ID, &link.Name, &link.Desc, &link.URL, &link.UpdatedAt, &link.GameID); err != nil {
-			log.Fatal(err)
-		}
-		links = append(links, &link)
+	result := db.Find(&links)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil, errors.New("Link not found")
+	} else if result.Error != nil {
+		log.Fatal(result.Error)
 	}
 	return links, nil
 }
 
 func (l Link) GetByID(id string) (*Link, error) {
-	db := db.GetDB()
-	sql := "SELECT * FROM links WHERE id = " + id
-	rows, err := db.Query(sql)
-	if err != nil {
-		log.Fatal(err)
+	db := GetDB()
+	link := &Link{}
+	result := db.Where("id = ?", id).First(link)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil, errors.New("Link not found")
+	} else if result.Error != nil {
+		log.Fatal(result.Error)
 	}
-	defer rows.Close()
-	link := Link{}
-	for rows.Next() {
-		if err := rows.Scan(&link.ID, &link.Name, &link.Desc, &link.URL, &link.UpdatedAt, link.GameID); err != nil {
-			log.Fatal(err)
-		}
-	}
-	return &link, nil
+	return link, nil
 }
 
-func (l Link) GetByGameID(id string) (*[]Link, error) {
-	db := db.GetDB()
-	sql := "SELECT * FROM links WHERE game_id = ? limit 10"
-	rows, err := db.Query(sql, id)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
+func (l Link) GetByGameID(id string) ([]Link, error) {
+	db := GetDB()
 	var links []Link
-	for rows.Next() {
-		link := Link{}
-		if err := rows.Scan(&link.ID, &link.Name, &link.Desc, &link.URL, &link.UpdatedAt, &link.GameID); err != nil {
-			log.Fatal(err)
-		}
-		links = append(links, link)
+	result := db.Where("game_id = ?", id).Limit(10).Find(&links)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil, errors.New("Links not found")
+	} else if result.Error != nil {
+		log.Fatal(result.Error)
 	}
-	return &links, nil
+	return links, nil
 }
 
 func (l Link) Create(link *Link) (*Link, error) {
-	db := db.GetDB()
-	id := uuid.NewV4()
-	link.ID = id
+	db := GetDB()
+	link.ID = uuid.NewV4()
 	link.UpdatedAt = time.Now()
-	stmt := `INSERT INTO links (id, name, desc, url, updated_at, game_id) VALUES (?, ?, ?, ?, ?, ?)`
-	_, err := db.Exec(stmt, link.ID, link.Name, link.Desc, link.URL, link.UpdatedAt, link.GameID)
-	if err != nil {
-		log.Fatal(err)
-		return nil, err
+	result := db.Create(link)
+	if result.Error != nil {
+		log.Fatal(result.Error)
+		return nil, result.Error
 	}
 	return link, nil
 }
 
 func (l Link) Delete(id string) error {
-	db := db.GetDB()
-	sql := "DELETE FROM links WHERE id = ?"
-	_, err := db.Exec(sql, id)
-	if err != nil {
-		log.Fatal(err)
-		return err
+	db := GetDB()
+	link := &Link{}
+	result := db.Where("id = ?", id).Delete(link)
+	if result.Error != nil {
+		log.Fatal(result.Error)
+		return result.Error
 	}
 	return nil
 }

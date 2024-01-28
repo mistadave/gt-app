@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/mistadave/gt-api/config"
-	"github.com/mistadave/gt-api/db"
+	"github.com/mistadave/gt-api/models"
 	"github.com/mistadave/gt-api/server"
 )
 
@@ -18,6 +18,6 @@ func main() {
 	}
 	flag.Parse()
 	config.Init(*environment)
-	db.Init()
+	models.Init()
 	server.Init()
 }
