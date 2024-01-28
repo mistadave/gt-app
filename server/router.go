@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/mistadave/gt-api/controller"
 	"github.com/mistadave/gt-api/middlewares"
@@ -13,6 +14,7 @@ func NewRouter() *gin.Engine {
 	router.Use(middlewares.CORSMiddleware())
 	health := new(controller.HealthController)
 	router.GET("/health", health.Status)
+	router.Use(static.Serve("/", static.LocalFile("./static", true)))
 
 	user := new(controller.UserController)
 	game := new(controller.GameController)
