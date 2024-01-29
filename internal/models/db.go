@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/mistadave/gt-app/db"
+	"github.com/mistadave/gt-app/internal/db"
 	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
 )
 
 var dbc *gorm.DB
 
-func Init() {
+func DBInit() {
 	//TODO: Decide which DB to use from config
 	dbc = db.GORMCreateSqliteDB()
 	log.Println("Migrating models")

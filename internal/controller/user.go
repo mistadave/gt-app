@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/mistadave/gt-app/form"
-	"github.com/mistadave/gt-app/models"
+	"github.com/mistadave/gt-app/internal/form"
+	"github.com/mistadave/gt-app/internal/models"
 )
 
 type UserController struct{}
@@ -49,6 +49,18 @@ func (u UserController) CreateUser(c *gin.Context) {
 	var signUp form.UserSignup
 	c.BindJSON(&signUp)
 	user, err := userModel.Signup(signUp)
+	if err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, user)
+	}
+}
+
+func (u UserController) Login(c *gin.Context) {
+	var login form.UserLogin
+	c.BindJSON(&login)
+	user, err := userModel.Login(login)
+
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {

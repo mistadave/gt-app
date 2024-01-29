@@ -3,8 +3,8 @@ package server
 import (
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
-	"github.com/mistadave/gt-app/controller"
-	"github.com/mistadave/gt-app/middlewares"
+	"github.com/mistadave/gt-app/internal/controller"
+	"github.com/mistadave/gt-app/internal/middlewares"
 )
 
 func NewRouter() *gin.Engine {
@@ -24,7 +24,7 @@ func NewRouter() *gin.Engine {
 	v1 := router.Group("v1")
 	{
 		v1.Use(middlewares.AuthMiddleware())
-		userGroup := v1.Group("user")
+		userGroup := v1.Group("users")
 		{
 			// TODO find out if it's better to define inside or outside the group
 			userGroup.GET("/", user.GetUsers)
@@ -33,20 +33,20 @@ func NewRouter() *gin.Engine {
 			userGroup.POST("/", user.CreateUser)
 
 		}
-		gameGroup := v1.Group("game")
+		gameGroup := v1.Group("games")
 		{
 			gameGroup.GET("/", game.GetGames)
 			gameGroup.GET("/:id", game.GetGameById)
 			gameGroup.POST("/", game.CreateGame)
 			gameGroup.GET("/:id/links", link.GetLinksByGame)
 		}
-		linkGroup := v1.Group("link")
+		linkGroup := v1.Group("links")
 		{
 			linkGroup.GET("/", link.GetLinks)
 			linkGroup.GET("/:id", link.GetLinkById)
 			linkGroup.POST("/", link.CreateLink)
 		}
-		tagGroup := v1.Group("tag")
+		tagGroup := v1.Group("tags")
 		{
 			tagGroup.GET("/", tag.GetTags)
 			tagGroup.GET("/:name", tag.SearchTag)

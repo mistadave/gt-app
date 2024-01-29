@@ -4,7 +4,7 @@ import (
 	"errors"
 	"log"
 
-	"github.com/mistadave/gt-app/form"
+	"github.com/mistadave/gt-app/internal/form"
 	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
 )
