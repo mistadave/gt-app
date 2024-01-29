@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/mistadave/gt-api/form"
-	"github.com/mistadave/gt-api/models"
+	"github.com/mistadave/gt-app/form"
+	"github.com/mistadave/gt-app/models"
 )
 
 type UserController struct{}

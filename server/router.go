@@ -3,8 +3,8 @@ package server
 import (
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
-	"github.com/mistadave/gt-api/controller"
-	"github.com/mistadave/gt-api/middlewares"
+	"github.com/mistadave/gt-app/controller"
+	"github.com/mistadave/gt-app/middlewares"
 )
 
 func NewRouter() *gin.Engine {

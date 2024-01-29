@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/mistadave/gt-api/config"
-	"github.com/mistadave/gt-api/models"
-	"github.com/mistadave/gt-api/server"
+	"github.com/mistadave/gt-app/config"
+	"github.com/mistadave/gt-app/models"
+	"github.com/mistadave/gt-app/server"
 )
 
 func main() {

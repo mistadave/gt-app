@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/mistadave/gt-api/db"
+	"github.com/mistadave/gt-app/db"
 	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
 )
