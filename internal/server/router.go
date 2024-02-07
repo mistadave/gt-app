@@ -23,6 +23,11 @@ func NewRouter() *gin.Engine {
 
 	v1 := router.Group("v1")
 	{
+		authGroup := v1.Group("auth")
+		{
+			authGroup.POST("/login", user.Login)
+			// authGroup.POST("/register", user.Register)
+		}
 		v1.Use(middlewares.AuthMiddleware())
 		userGroup := v1.Group("users")
 		{
