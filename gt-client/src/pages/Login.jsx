@@ -1,11 +1,14 @@
-
 const Login = () => {
-    return (
-        <div>
-            <h1>Welcome to the Home Screen</h1>
-            <p>This is the home screen of our application.</p>
-        </div>
-    );
-}
+  return (
+    <div>
+      <h1>Login</h1>
+      <div>
+        <input name="username" placeholder="Username" />
+        <input name="password" placeholder="Password" />
+        <button>Login</button>
+      </div>
+    </div>
+  );
+};
 
 export default Login;

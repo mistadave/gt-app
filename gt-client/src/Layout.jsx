@@ -1,27 +1,15 @@
-import React from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import Header from "./pages/Header";
 
 const Layout = () => {
   return (
     <>
+      <nav>
+        <Header></Header>
+      </nav>
       <div>
         <h1>Games Tutor</h1>
-        <p>
-          Just some games
-        </p>
-        <div>
-          <nav>
-            <ul>
-              <li>
-                <Link to="/">Home</Link>
-              </li>
-              <li>
-                <Link to="/games">Games</Link>
-              </li>
-            </ul>
-          </nav>
-          <hr />
-        </div>
+        <hr></hr>
         <Outlet />
       </div>
     </>
