@@ -31,6 +31,7 @@ func (u GameController) GetGameById(c *gin.Context) {
 }
 
 func (u GameController) CreateGame(c *gin.Context) {
+	// TODO validate input and maybe create a new model for the input
 	var game models.Game
 	c.BindJSON(&game)
 	gameNew, err := gameModel.Create(&game)
