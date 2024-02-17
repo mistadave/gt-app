@@ -15,7 +15,7 @@ type Game struct {
 	Desc        string    `gorm:"type:text"`
 	Image       string    `gorm:"type:varchar(255)"`
 	Genre       string    `gorm:"type:varchar(100)"`
-	ReleaseDate string    `gorm:"type:date"`
+	ReleaseDate time.Time `gorm:"type:date"`
 	gorm.Model
 }
 
