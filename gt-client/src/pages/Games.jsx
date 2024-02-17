@@ -1,33 +1,20 @@
 import "./Games.css";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Link, Outlet } from "react-router-dom";
+import {getGames} from "../api"
+import { useEffect, useState } from "react";
 
 const Games = () => {
-  const games = [
-    {
-      ID: "f0000000-0000-0000-0000-000000000000",
-      Name: "Game 0",
-      Desc: "",
-      Image: "",
-      Genre: "",
-      ReleaseDate: "2012-01-01T00:00:00Z",
-      CreatedAt: "2024-01-28T10:50:12.917406203+01:00",
-      UpdatedAt: "2024-01-28T10:50:12.917406203+01:00",
-      DeletedAt: null,
-    },
-    {
-      ID: "f0000000-0000-0000-0000-000000000001",
-      Name: "Game 1",
-      Desc: "",
-      Image: "",
-      Genre: "",
-      ReleaseDate: "2014-02-21T00:00:00Z",
-      CreatedAt: "2024-01-28T10:50:12.920291393+01:00",
-      UpdatedAt: "2024-01-28T10:50:12.920291393+01:00",
-      DeletedAt: null,
-    },
-  ];
+  const [games, setGames] = useState([]);
+ 
+  useEffect(() => {
+    getGames().then((res) => {
+      setGames(res);
+    });
+  }, []);
+ 
   return (
     <>
       <div>
@@ -38,6 +25,7 @@ const Games = () => {
               <CardHeader>
                 <CardTitle>{game.Name}</CardTitle>
               </CardHeader>
+              <Badge variant="default">{game.Genre}</Badge>
               <CardContent>
                 <img src={game.Image || "default-image.jpg"} alt="Game Image" />
                 <Link to={`/games/links/${game.ID}`}>

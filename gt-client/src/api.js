@@ -18,11 +18,11 @@ export function signup(login, firstname, lastname, password) {
 }
 
 export function getGames() {
-  return getJson(`/games`).then(parseJSON);
+  return getJson(`/games/`).then(parseJSON);
 }
 
 export function getGameLink(id) {
-  return getJson(`/games/${id}/links`).then(parseJSON);
+  return getJson(`/games/${id}/links/`).then(parseJSON);
 }
 
 export function getAccount(accountNr, token) {
