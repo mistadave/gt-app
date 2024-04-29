@@ -111,13 +111,21 @@ func FillDummyData() {
 		dbc.Create(&link)
 	}
 
+	for i := 0; i < 10; i++ {
+		genre := Genre{
+			Name: fmt.Sprintf("Genre%d", i),
+		}
+		dbc.Create(&genre)
+	}
+
 	// Create dummy games
 	for i := 0; i < 10; i++ {
 		game := Game{
 			ID:          uuid.FromStringOrNil(fmt.Sprintf("f0000000-0000-0000-0000-00000000000%d", i)),
 			Name:        fmt.Sprintf("Game%d", i),
 			Desc:        fmt.Sprintf("Description for Game%d", i),
-			Genre:       "Action",
+			GenreID:     uint(i),
+			Genre:       Genre{Name: fmt.Sprintf("Genre%d", i)},
 			ReleaseDate: time.Date(2021, time.January, i+1, 0, 0, 0, 0, time.UTC),
 			Image:       fmt.Sprintf("http://example.com/game%d.jpg", i),
 		}

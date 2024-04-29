@@ -45,6 +45,12 @@ func NewRouter() *gin.Engine {
 			gameGroup.POST("/", game.CreateGame)
 			gameGroup.GET("/:id/links", link.GetLinksByGame)
 		}
+		genreGroup := v1.Group("genres")
+		{
+			genreGroup.GET("/", game.GetGenres)
+			genreGroup.POST("/", game.CreateGenre)
+			genreGroup.DELETE("/:id", game.DeleteGenre)
+		}
 		linkGroup := v1.Group("links")
 		{
 			linkGroup.GET("/", link.GetLinks)

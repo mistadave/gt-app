@@ -14,7 +14,8 @@ type Game struct {
 	Name        string    `gorm:"type:varchar(100);not null"`
 	Desc        string    `gorm:"type:text"`
 	Image       string    `gorm:"type:varchar(255)"`
-	Genre       string    `gorm:"type:varchar(100)"`
+	GenreID     uint
+	Genre       Genre     `gorm:"foreignkey:GenreID"`
 	ReleaseDate time.Time `gorm:"type:date"`
 	gorm.Model
 }
@@ -62,4 +63,15 @@ func (g Game) Delete(id string) error {
 		return errors.New("error when trying to delete " + id + " data from database")
 	}
 	return nil
+}
+
+func (g Game) Update(game *Game) (*Game, error) {
+	db := GetDB()
+	game.UpdatedAt = time.Now()
+	err := db.Save(&game).Error
+	if err != nil {
+		log.Println(err)
+		return nil, errors.New("error when trying to update data to database")
+	}
+	return game, nil
 }

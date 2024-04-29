@@ -1,11 +1,18 @@
 import { useParams } from "react-router-dom";
 
 import { getGameLink } from "../api";
+import { useEffect } from "react";
 
 const GameLink = () => {
   let { id } = useParams();
   console.log(id);
-
+  let result = {};
+  useEffect(() => {
+    getGameLink(id).then((res) => {
+      console.log(res);
+      result = res;
+    });
+  }, [id]);
   let links = [
     {
       ID: "f0000000-0000-0000-0000-000000000000",
@@ -33,6 +40,11 @@ const GameLink = () => {
     <>
       <h1>Game Link</h1>
       <div>
+        <div>
+          <h2>Links</h2>
+          <p>Show some links loaded</p>
+          {result.Name}
+        </div>
         {links.map((link) => (
           <div key={link.ID}>
             <p>{link.Desc}</p>
