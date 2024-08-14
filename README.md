@@ -11,7 +11,7 @@ UI for the api.
 Install air for hot reload
 
 ```bash
-go install github.com/cosmtrek/air@latest
+go install github.com/air-verse/air@latest
 # may need to register alias in your bash, zsh
 alias air='$(go env GOPATH)/bin/air'
 air -v
